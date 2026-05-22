@@ -422,4 +422,65 @@ for i in [a,b,c,d,e,f]:
     i.set_xlim(0, )
 f.set_xlabel('Time (s)')
 # %% Ahora quiero realizar fft sobre las señales recortadas a ciclos enteros para obtener la frecuencia fundamental y sus armónicos, y comparar con la señal de calibración del generador.
-A
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Paso temporal
+dt = t1[1] - t1[0]
+
+# Frecuencia de muestreo
+fs = 1/dt
+
+# Cantidad de muestras
+N = len(v1r)
+
+# FFT real
+V = np.fft.rfft(v1r)
+
+# Eje de frecuencias
+freq = np.fft.rfftfreq(N, d=dt)
+
+A = 2*np.abs(V)/N
+plt.figure(figsize=(8,4))
+
+plt.plot(freq, A)
+
+plt.xlabel('Frecuencia [Hz]')
+plt.ylabel('Amplitud')
+plt.xlim(0, 2e7)
+
+plt.grid()
+plt.show()
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+
+dt = t1[1]-t1[0]
+fs = 1/dt
+N = len(v1r)
+
+# FFT
+V = np.fft.rfft(v1r)
+
+# frecuencias
+freq = np.fft.rfftfreq(N, dt)
+
+# amplitud pico
+A = 2*np.abs(V)/N
+
+# potencia
+P = A**2 / 2
+
+# mostrar armónicos importantes
+idx = P > 1e-2
+
+for f, a, p in zip(freq[idx], A[idx], P[idx]):
+    print(f'{f:8.1f} Hz | A={a:.4f} | P={p:.4f}')
+    
+plt.plot(freq, A)
+plt.xlabel('Frecuencia [Hz]')
+plt.ylabel('Amplitud')
+plt.xlim(0, 2e7)
+plt.grid()
+plt.show()
+# %%
