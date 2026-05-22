@@ -463,7 +463,7 @@ N = len(v1r)
 V = np.fft.rfft(v1r)
 
 # frecuencias
-freq = np.fft.rfftfreq(N, dt)
+freq = np.fft.rfftfreq(N, dt)/1000
 
 # amplitud pico
 A = 2*np.abs(V)/N
@@ -472,15 +472,17 @@ A = 2*np.abs(V)/N
 P = A**2 / 2
 
 # mostrar armónicos importantes
-idx = P > 1e-2
+idx = P > 5e-3
+
 
 for f, a, p in zip(freq[idx], A[idx], P[idx]):
-    print(f'{f:8.1f} Hz | A={a:.4f} | P={p:.4f}')
+    print(f'{f:8.1f} kHz | A={a:8.4f} | P={p:8.4f}')
     
 plt.plot(freq, A)
-plt.xlabel('Frecuencia [Hz]')
+plt.xlabel('Frecuencia [kHz]')
 plt.ylabel('Amplitud')
-plt.xlim(0, 2e7)
+plt.xlim(0, 2e4)
+plt.xticks(freq[idx])
 plt.grid()
 plt.show()
 # %%
